@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -10,6 +12,7 @@ public class Main {
     private static int Exclude = 0;
     private static int trailer = 0;
     private static int retriever = 0;
+    private static String histogramContent = "";
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
@@ -23,6 +26,9 @@ public class Main {
                         return;
                     case 2:
                         staffversion();
+                        break;
+                    case 3:
+                        textfile(histogramContent);
                         return;
                     default:
                         System.out.println("Enter the valid option");
@@ -112,18 +118,30 @@ public class Main {
             }
         }
         int totaloutcomes = progress + trailer + retriever + Exclude;
+//
+//        System.out.println("-------------------------------------------------------");
+//        System.out.println("Histogram");
+//
+//        printHistogram("Progress", progress);
+//        printHistogram("Trailer", trailer);
+//        printHistogram("Retriever", retriever);
+//        printHistogram("Excluded", Exclude);
+//
+//        System.out.println();
+//        System.out.println(totaloutcomes + " outcomes in total.");
+//        System.out.println("--------------------------------------------------------");
 
-        System.out.println("-------------------------------------------------------");
-        System.out.println("Histogram");
+        histogramContent += "-------------------------------------------------------\n";
+        histogramContent += "Histogram\n\n";
 
-        printHistogram("Progress", progress);
-        printHistogram("Trailer", trailer);
-        printHistogram("Retriever", retriever);
-        printHistogram("Excluded", Exclude);
+        histogramContent += printHistogram("Progress", progress);
+        histogramContent += printHistogram("Trailer", trailer);
+        histogramContent += printHistogram("Retriever", retriever);
+        histogramContent += printHistogram("Excluded", Exclude);
 
-        System.out.println();
-        System.out.println(totaloutcomes + " outcomes in total.");
-        System.out.println("--------------------------------------------------------");
+        histogramContent += "\n";
+        histogramContent += totaloutcomes + " outcomes in total.\n";
+        histogramContent += "--------------------------------------------------------\n";
     }
 
 
@@ -137,10 +155,11 @@ public class Main {
         return false;
     }
 
-    public static void printHistogram(String category, int count) {
+    public static String printHistogram(String category, int count) {
         String histogram = category + " " + count + "\t: ";
         histogram += "*".repeat(count);
         System.out.println(histogram);
+        return histogram+ "\n";
     }
 
     private static void studentversion() {
@@ -210,6 +229,20 @@ public class Main {
                 retriever = retriever + 1;
             }
         break;
+        }
+    }
+
+    private static void textfile(String histogramContent){
+        try {
+            //creates a new  file or opens the  file if available and writes booked seat details
+            FileWriter myWriter = new FileWriter("marking-system\\marking-system files\\marks.txt");
+
+            myWriter.write(histogramContent.toString());
+            //close the file
+            myWriter.close();
+            System.out.println("Successfully save to the file.");
+        } catch(IOException e) {
+            System.out.println("An error occurred.");
         }
     }
 }
